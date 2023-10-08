@@ -32,6 +32,6 @@ public class Section {
 	@Enumerated(EnumType.STRING)
 	private ProductType productType;
 	
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+	@OneToMany
 	private List<Product> products;
 }

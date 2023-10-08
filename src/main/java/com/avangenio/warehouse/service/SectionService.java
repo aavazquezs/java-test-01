@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.avangenio.warehouse.model.Product;
+import com.avangenio.warehouse.model.Section;
 
 /**
  * 
@@ -26,6 +27,13 @@ public interface SectionService {
 	 */
 	public void addProductsToSectionByProductIds(UUID sectionId, List<UUID> productsId);
 	
+	/**
+	 * Remove a section by Id if the section's list is empty
+	 * @param id
+	 * @return
+	 */
+	public Section delete(UUID id);
 	
+	public Section getSectionById(UUID id);
 	
 }

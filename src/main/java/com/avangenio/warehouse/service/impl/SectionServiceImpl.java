@@ -1,13 +1,11 @@
 package com.avangenio.warehouse.service.impl;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -48,9 +46,17 @@ public class SectionServiceImpl implements SectionService{
 			
 			section.getProducts().add(product);
 			
+			//product.setSection(section);
+			
+			//productRepository.save(product);
+			
 		}
 		
+		//productRepository.flush();
+		
 		sectionRepository.save(section);
+		
+		//sectionRepository.flush();
 		
 	}
 
@@ -93,6 +99,29 @@ public class SectionServiceImpl implements SectionService{
 		
 		sectionRepository.save(section);
 		
+	}
+
+	@Override
+	public Section delete(UUID id) {
+		
+		Section section = sectionRepository.getReferenceById(id);
+		
+		if(section.getProducts().isEmpty()) {
+			
+			sectionRepository.deleteById(id);
+			
+		}else {
+			
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Section with id="+id.toString()+" is not empty");
+			
+		}
+		
+		return section;
+	}
+
+	@Override
+	public Section getSectionById(UUID id) {
+		return sectionRepository.findById(id).orElseThrow();
 	}
 	
 	
