@@ -45,18 +45,10 @@ public class SectionServiceImpl implements SectionService{
 		for(Product product:products) {
 			
 			section.getProducts().add(product);
-			
-			//product.setSection(section);
-			
-			//productRepository.save(product);
-			
+				
 		}
 		
-		//productRepository.flush();
-		
 		sectionRepository.save(section);
-		
-		//sectionRepository.flush();
 		
 	}
 
