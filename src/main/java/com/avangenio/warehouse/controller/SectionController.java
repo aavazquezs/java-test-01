@@ -32,15 +32,6 @@ public class SectionController {
 		
 	}
 	
-	@PatchMapping("/{sectionId}/addProducts")
-	public void addProducts(
-			@PathVariable("sectionId") UUID sectionId,
-			@RequestBody List<Product> products) {
-		
-		sectionService.addProductsToSection(sectionId, products);
-		
-	}
-	
 	@DeleteMapping("/{sectionId}")
 	public void delete(
 			@PathVariable("sectionId") UUID sectionId) {
@@ -48,12 +39,5 @@ public class SectionController {
 		sectionService.delete(sectionId);
 		
 	}
-	/*
-	@GetMapping("/{sectionId}")
-	public Section getSection(
-				@PathVariable("sectionId") UUID sectionId
-			){
-		return sectionService.getSectionById(sectionId);
-	}*/
 	
 }
