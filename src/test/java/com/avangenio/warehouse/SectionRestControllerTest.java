@@ -25,8 +25,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.avangenio.warehouse.controller.WithMockUser;
 import com.avangenio.warehouse.model.ProductType;
 import com.avangenio.warehouse.model.Section;
+import com.avangenio.warehouse.repository.ProductRepository;
 import com.avangenio.warehouse.repository.SectionRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +36,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = JavaTest01Application.class)
 @AutoConfigureMockMvc
-//@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class SectionRestControllerTest {
 	
 	@Autowired
@@ -42,6 +43,9 @@ public class SectionRestControllerTest {
 
     @Autowired
     private SectionRepository repository;
+    
+    @Autowired
+    private ProductRepository productRepository;
     
     private Section createTestSection() {
     	Section section = Section.builder()
@@ -53,6 +57,7 @@ public class SectionRestControllerTest {
     }
     
     @Test
+    @WithMockUser
     public void givenSections_whenGetSections_thenStatus200()
       throws Exception {
 
@@ -67,7 +72,11 @@ public class SectionRestControllerTest {
     }
     
     @Test
+    @WithMockUser
     public void testCreateSection() throws JsonProcessingException, Exception {
+    	
+    	this.productRepository.deleteAll();
+    	this.repository.deleteAll();
     	
     	Section section = Section.builder()
 				.size(100)
@@ -79,11 +88,12 @@ public class SectionRestControllerTest {
                 .content(new ObjectMapper().writeValueAsString(section)))
                 .andExpect(status().isCreated());
     	
-    	assertThat(repository.count()).isEqualTo(3);
+    	assertThat(repository.count()).isEqualTo(1);
     	
     }
     
     @Test
+    @WithMockUser
     public void testUpdateSection() throws JsonProcessingException, Exception {
     	
     	createTestSection();

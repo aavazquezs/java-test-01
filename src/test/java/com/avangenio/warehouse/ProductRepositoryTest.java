@@ -20,9 +20,7 @@ import com.avangenio.warehouse.model.Section;
 import com.avangenio.warehouse.repository.ProductRepository;
 import com.avangenio.warehouse.repository.SectionRepository;
 
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class ProductRepositoryTest {
@@ -94,6 +92,8 @@ public class ProductRepositoryTest {
 	@Test
 	public void findallTest() {
 		
+		this.repository.deleteAll();
+		
 		List<Product> products = repository.findAll();
 		
 		assertEquals(0, products.size());
@@ -137,6 +137,10 @@ public class ProductRepositoryTest {
 	
 	@Test
 	public void deleteTest() {
+		
+		this.repository.deleteAll();
+		this.sectionRepository.deleteAll();
+		
 		
 		Section section = Section.builder()
 				.size(100)
@@ -215,11 +219,11 @@ public class ProductRepositoryTest {
 		
 		repository.save(product2);
 		
-		List<Product> products = repository.filterProducts(null, "L-02", null, null, null, null);
+		List<Product> products = repository.filterProducts("L-02", null, null, null, null);
 		
 		assertThat(!products.isEmpty() && products.size()==2);
 		
-		products = repository.filterProducts(null, null, null, true, "GREEN", null);
+		products = repository.filterProducts(null, null, true, "GREEN", null);
 		
 		assertThat(products.size()==1 && products.get(0).getSize()==100);
 	}

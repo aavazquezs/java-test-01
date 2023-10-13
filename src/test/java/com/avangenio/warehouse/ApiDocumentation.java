@@ -99,6 +99,7 @@ public class ApiDocumentation {
 	
 	@Test
 	void sectionListExample() throws Exception {
+		this.productRepository.deleteAll();
 		this.sectionRepository.deleteAll();
 
 		createSection(1, ProductType.Clothing);

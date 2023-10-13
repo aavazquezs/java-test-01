@@ -116,6 +116,10 @@ public class SectionRepositoryTest {
 	
 	@Test
 	public void findallSectionsTest() {
+		
+		this.productRepository.deleteAll();
+		this.repository.deleteAll();
+		
 		List<Section> sections = repository.findAll();
 		assertEquals(0, sections.size());
 		Section section = Section.builder()
@@ -142,6 +146,9 @@ public class SectionRepositoryTest {
 	
 	@Test
 	public void deleteSectionTest() {
+		
+		this.productRepository.deleteAll();
+		this.repository.deleteAll();
 		
 		Section section = Section.builder()
 				.size(100)

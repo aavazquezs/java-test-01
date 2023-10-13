@@ -19,11 +19,10 @@ import com.avangenio.warehouse.model.Product;
 public interface ProductRepository extends JpaRepository<Product, UUID>, PagingAndSortingRepository<Product, UUID> {
 	
 	@RestResource(path="filter")
-	@Query(value="SELECT p FROM Product p WHERE (:sectionId IS NULL OR p.section.id=:sectionId) AND " +
+	@Query(value="SELECT p FROM Product p WHERE " +
 	"(:lote IS NULL OR p.lote = :lote) AND (:price IS NULL OR p.price = :price) AND (:isFragile IS NULL OR p.isFragile = :isFragile) AND "+
 	"(:color IS NULL OR p.color = :color) AND (:containerType IS NULL OR p.containerType = :containerType)")
 	List<Product> filterProducts(
-			@Param("sectionId") UUID id,
 			@Param("lote") String lote,
 			@Param("price") Double price,
 			@Param("isFragile") Boolean isFragile,

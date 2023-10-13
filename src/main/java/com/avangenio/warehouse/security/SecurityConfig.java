@@ -23,6 +23,8 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	
 	private final CustomUserDetailService customUserDetailService;
+	
+	private final UnauthorizedHandler unauthorizedHandler;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -36,15 +38,6 @@ public class SecurityConfig {
 				.passwordEncoder(passwordEncoder())
 				.and().build();
 	}
-//	@Bean
-//	public UserDetailsService userDetailsService(UserRepository userRepo) {
-//		return username -> {
-//			User user = userRepo.findByUsername(username);
-//			if (user != null)
-//				return user;
-//			throw new UsernameNotFoundException("User '" + username + "' not found");
-//		};
-//	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -60,6 +53,8 @@ public class SecurityConfig {
 						(sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
 				.formLogin(formLogin -> formLogin.disable())
+				
+				.exceptionHandling(exceptionHandling->exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
 
 				.securityMatcher("/**")
 
@@ -67,9 +62,9 @@ public class SecurityConfig {
 
 						(authorize) -> authorize
 
-								.requestMatchers("/api/api-docs").permitAll()
+								.requestMatchers("/api/api-docs/**").permitAll()
 
-								.requestMatchers("/api/swagger-ui").permitAll()
+								.requestMatchers("/api/swagger-ui/**").permitAll()
 
 								.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
 
