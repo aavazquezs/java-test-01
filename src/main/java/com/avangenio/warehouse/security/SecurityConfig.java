@@ -3,19 +3,15 @@ package com.avangenio.warehouse.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.avangenio.warehouse.model.User;
-import com.avangenio.warehouse.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,12 +21,21 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	
+	private final CustomUserDetailService customUserDetailService;
 
-//	@Bean
-//	public PasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
+	@Bean
+	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+		return http.getSharedObject(AuthenticationManagerBuilder.class)
+				.userDetailsService(customUserDetailService)
+				.passwordEncoder(passwordEncoder())
+				.and().build();
+	}
 //	@Bean
 //	public UserDetailsService userDetailsService(UserRepository userRepo) {
 //		return username -> {
@@ -70,7 +75,7 @@ public class SecurityConfig {
 
 								.requestMatchers("/api/sections", "/api/products").hasRole("USER")
 
-								.requestMatchers("/api/section").hasRole("ADMIN")
+								.requestMatchers(HttpMethod.DELETE, "/api/section").hasRole("ADMIN")
 
 								// .requestMatchers("/", "/**").permitAll()
 
